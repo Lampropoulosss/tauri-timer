@@ -1,27 +1,23 @@
 <script>
   // @ts-nocheck
 
-  import { createEventDispatcher } from "svelte";
+  import Buttons from "./Buttons.svelte";
 
-  const dispatch = createEventDispatcher();
-
+  // @ts-nocheck
   export let timerStarted = false;
+  export let isPaused = false;
+  export let alarmFinished = false;
 
   let timer = "";
   let isInvalid = false;
 
-  function validateInput() {
-    // Regular expression to validate HH:MM:SS format
-    const regex = /^([0-1]\d|2[0-3]):([0-5]\d):([0-5]\d)$/;
-    isInvalid = !regex.test(timer);
-  }
-
   function handleKeyDown(e) {
     if (
-      !e.key &&
-      /^[0-9]$/i.test(e.target.value[e.target.value.length - 1]) &&
-      e.target.value.length <= 8
+      e.target.value.length > 8 ||
+      !/^[0-9]$/i.test(e.target.value[e.target.value.length - 1])
     ) {
+      e.target.value = e.target.value.slice(0, e.target.value.length - 1);
+    } else if (!e.key) {
       if (e.target.value.length == 2) {
         timer = e.target.value + ":";
       } else if (e.target.value.length == 5) {
@@ -56,23 +52,19 @@
     class:is-invalid={isInvalid}
     autocomplete="off"
   />
-  {#if timerStarted}
-    <button
-      on:click={() => {
-        isInvalid = false;
-        dispatch("clear");
-      }}>Stop</button
-    >
-  {:else}
-    <button
-      on:click={() => {
-        validateInput();
-        if (!isInvalid) {
-          dispatch("start", { timer });
-        }
-      }}>Start</button
-    >
-  {/if}
+  <Buttons
+    {timer}
+    {isInvalid}
+    {alarmFinished}
+    {isPaused}
+    {timerStarted}
+    on:clear
+    on:pause-resume
+    on:start
+    on:invalid={() => {
+      isInvalid = true;
+    }}
+  />
 </div>
 
 <style>
@@ -84,14 +76,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1em;
+    gap: 0.5em;
   }
 
-  input,
-  button {
+  input {
     border-radius: 8px;
     border: 2px solid transparent;
-    padding: 0.4em 1.1em;
+    padding: 0.4em 0.5em;
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
@@ -102,26 +93,15 @@
   }
 
   input {
-    width: 150px;
+    width: 100px;
     text-align: center;
   }
 
-  button {
-    cursor: pointer;
+  input:hover {
+    border-color: #00ced1;
   }
 
-  input:hover,
-  button:hover {
-    border-color: #396cd8;
-  }
-
-  button:active {
-    border-color: #396cd8;
-    background-color: #0f0f0f69;
-  }
-
-  input,
-  button {
+  input {
     outline: none;
   }
 

@@ -12,6 +12,9 @@
   let interval;
   let audio;
 
+  let isPaused = false;
+  let alarmFinished = false;
+
   onMount(() => {
     fetch("/audio.mp3")
       .then((response) => response.blob())
@@ -44,11 +47,14 @@
     }
 
     interval = setInterval(() => {
+      if (isPaused) return;
+
       totalSeconds -= 1;
       timer.set(totalSeconds);
 
       if (totalSeconds <= 0) {
         clearInterval(interval);
+        alarmFinished = true;
         timer.set(0);
         invoke("notify");
         audio.play();
@@ -63,11 +69,17 @@
     timer.set(0);
     audio.pause();
     audio.currentTime = 0;
+    isPaused = false;
+    alarmFinished = false;
+  }
+
+  function pause_resume() {
+    isPaused = !isPaused;
   }
 </script>
 
 <div class="container">
-  <div class="timer">
+  <div class="timer" class:colored={alarmFinished}>
     {#if $timer > 0}
       {formatTime($timer)}
     {:else}
@@ -77,6 +89,9 @@
   <Options
     on:start={startTimer}
     on:clear={clearTimer}
+    on:pause-resume={pause_resume}
+    {isPaused}
+    {alarmFinished}
     timerStarted={$timer > 0 || !audio?.paused}
   />
 </div>
@@ -114,6 +129,10 @@
     flex-direction: column;
     justify-content: center;
     text-align: center;
+  }
+
+  .colored {
+    color: #00ced1;
   }
 
   .timer {
