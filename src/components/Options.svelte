@@ -51,6 +51,7 @@
     }}
     class:is-invalid={isInvalid}
     autocomplete="off"
+    disabled={timerStarted}
   />
   <Buttons
     {timer}
@@ -82,27 +83,31 @@
   input {
     border-radius: 8px;
     border: 2px solid transparent;
-    padding: 0.4em 0.5em;
-    font-size: 1em;
+    padding: 0.4 0.5em;
+    font-family: Pacifico;
+    font-size: 1.1em;
     font-weight: 500;
-    font-family: inherit;
     color: #ffffff;
     background-color: #0f0f0f98;
     transition: border-color 0.25s;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  input {
     width: 100px;
     text-align: center;
+    outline: none;
+  }
+
+  input::placeholder {
+    font-size: 0.8em;
+    font-family: cursive;
   }
 
   input:hover {
     border-color: #00ced1;
   }
 
-  input {
-    outline: none;
+  input:disabled:hover {
+    border-color: transparent;
+    pointer-events: none;
   }
 
   input.is-invalid {

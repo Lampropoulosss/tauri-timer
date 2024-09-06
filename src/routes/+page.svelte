@@ -1,12 +1,13 @@
 <script>
   // @ts-nocheck
 
-  document.addEventListener("contextmenu", (event) => event.preventDefault());
-
   import { invoke } from "@tauri-apps/api/tauri";
   import Options from "../components/Options.svelte";
   import { writable } from "svelte/store";
   import { onMount } from "svelte";
+  import { shortcutDisabler } from "../utilities/shortcutDisabler";
+
+  shortcutDisabler(); // Disable shortcuts such as ctrl + R etc.
 
   let timer = writable(0);
   let interval;
@@ -97,8 +98,15 @@
 </div>
 
 <style>
+  @font-face {
+    font-family: "Pacifico";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/Pacifico-Regular.ttf") format("truetype");
+  }
+
   :root {
-    font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+    font-family: cursive, sans-serif;
     font-size: 16px;
     line-height: 24px;
     font-weight: 400;
@@ -111,6 +119,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
   }
 
   :global(*) {
@@ -136,6 +151,7 @@
   }
 
   .timer {
+    font-family: Pacifico;
     font-size: 3em;
     font-weight: 700;
     margin-bottom: 0.4em;

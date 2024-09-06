@@ -66,22 +66,12 @@
     background-color: #0f0f0f98;
     transition: border-color 0.25s;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  button {
     cursor: pointer;
+    outline: none;
   }
 
   button:hover {
     border-color: #00ced1;
-  }
-
-  button:active {
-    border-color: #00ced1;
-    background-color: #0f0f0f69;
-  }
-
-  button {
-    outline: none;
+    background-color: #0f0f0f59;
   }
 </style>
